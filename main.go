@@ -5,8 +5,10 @@ import (
 
 	"github.com/alexandre-normand/slackscot"
 	"github.com/alexandre-normand/slackscot/config"
-	"github.com/alexandre-normand/slackscot/plugins"
+	slackscotPlugins "github.com/alexandre-normand/slackscot/plugins"
 	"github.com/spf13/pflag"
+
+	"github.com/cflee/prime-sentinel/plugins"
 )
 
 const (
@@ -35,7 +37,10 @@ func main() {
 	options := make([]slackscot.Option, 0)
 
 	bot, err := slackscot.NewBot(name, v, options...).
-		WithPlugin(plugins.NewVersionner(name, version)).
+		WithPlugin(slackscotPlugins.NewVersionner(name, version)).
+		WithConfigurablePluginErr(plugins.QuoterPluginName, func(c *config.PluginConfig) (*slackscot.Plugin, error) {
+			return plugins.NewQuoter(c)
+		}).
 		Build()
 	defer bot.Close()
 	if err != nil {
