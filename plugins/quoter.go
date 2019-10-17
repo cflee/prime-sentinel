@@ -69,7 +69,9 @@ func NewQuoter(config *config.PluginConfig) (*slackscot.Plugin, error) {
 			Build())
 
 		// Command for bot mentions and DMs
-		// Matcher is configured to have frequency of 1, i.e. 100% chance
+		// Slackscot does not route direct mentions and direct messages to
+		// Hear Actions, so creating a parallel Command is necessary.
+		// Matcher is configured to have frequency of 1, i.e. 100% chance.
 		pluginBuilder = pluginBuilder.WithCommand(actions.NewCommand().
 			WithMatcher(q.matcher(c.Triggers, 1)).
 			WithUsage(strings.Join(c.Triggers, "|")).
@@ -86,7 +88,9 @@ func NewQuoter(config *config.PluginConfig) (*slackscot.Plugin, error) {
 func (q *Quoter) matcher(triggers []string, frequency float64) func(m *slackscot.IncomingMessage) bool {
 	return func(m *slackscot.IncomingMessage) bool {
 		// Ignore bot messages to prevent infinite loops from this bot
-		// hearing its own help command output
+		// hearing its own help command output. In theory the slackscot
+		// message routing should already ignore messages from its own userID
+		// but somehow I've observed it getting stuck in a loop on DMs.
 		user, err := q.UserInfoFinder.GetUserInfo(m.User)
 		if err != nil {
 			q.Logger.Printf("[%s] Error getting user info for user [%s]: %w\n", QuoterPluginName, m.User, err)
