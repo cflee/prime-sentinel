@@ -140,16 +140,9 @@ func (q *Quoter) answerer(responses []string) func(m *slackscot.IncomingMessage)
 		}
 		randomGen := rand.New(rand.NewSource(ts))
 
-		// Reply to specified thread if necessary
-		var opts []slackscot.AnswerOption
-		if len(m.ThreadTimestamp) > 0 {
-			opts = append(opts, slackscot.AnswerInExistingThread(m.ThreadTimestamp))
-		}
-
 		i := randomGen.Int31n(int32(len(responses)))
 		return &slackscot.Answer{
-			Text:    fmt.Sprintf("%s", responses[i]),
-			Options: opts,
+			Text: fmt.Sprintf("%s", responses[i]),
 		}
 	}
 }
