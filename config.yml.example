@@ -1,0 +1,16 @@
+token: "your-slack-bot-token"
+debug: false
+responseCacheSize: 5000
+timeLocation: "America/Los_Angeles"
+storagePath: "/your-path-to-bot-home"
+replyBehavior:
+  threadedReplies: true
+  broadcast: true
+plugins:
+  ohMonday:
+    channelIds: ["slackChannelId"]
+  fingerQuoter:
+    frequency: "100"
+    channelIDs: []
+  emojiBanner:
+    figletFontUrl: "http://www.figlet.org/fonts/banner.flf"
