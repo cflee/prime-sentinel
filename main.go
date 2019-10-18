@@ -41,6 +41,9 @@ func main() {
 		WithConfigurablePluginErr(plugins.QuoterPluginName, func(c *config.PluginConfig) (*slackscot.Plugin, error) {
 			return plugins.NewQuoter(c)
 		}).
+		WithConfigurablePluginErr(plugins.SchoolcodePluginName, func(c *config.PluginConfig) (*slackscot.Plugin, error) {
+			return plugins.NewSchoolcode(c)
+		}).
 		Build()
 	defer bot.Close()
 	if err != nil {

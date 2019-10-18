@@ -104,3 +104,26 @@ For each quoteconfig, all of these are mandatory:
 | `triggers` | List of strings, words that can trigger a response. This will be compiled into a [regexp](https://godoc.org/regexp) `(?i)\b_____\b`, where the underscores are the trigger strings, with regex metacharacters escaped away. |
 | `frequency` | Float, probability that a response will be triggered, e.g. 0.3 is 30% chance, 1.0 is 100% confirm plus chop will trigger |
 | `responses` | List of strings, candidate responses. Emojis, including custom emojis, can be used here. |
+
+### Schoolcode
+
+Schoolcode listens to commands directed at it, and tries to find schools or school codes.
+
+```
+find school 1234 - find school name for given 4-digit school code
+find school <string> - find school names that either contain this string or have initials exactly matching this string, if there are at most 10 results. string must not start with digit
+```
+
+The school codes are hard-coded in the plugin code because the [School Information Service](https://sis.moe.gov.sg) doesn't seem to expose the list of schools as an API, so HTML scraping is necessary.
+SIS is also missing certain categories of school codes (e.g. 61xx series for MOE Kindergarten).
+
+```yaml
+# ...
+plugins:
+  schoolcode:
+    threadedReplies: false
+```
+
+| Key | Description |
+|---|---|
+| `threadedReplies` | Boolean, response will be added as a thread reply if true. (default `false`) |
